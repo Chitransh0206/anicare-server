@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+}
+
+model Rescue {
+  id          Int      @id @default(autoincrement())
+  animalType  String
+  description String
+  location    String
+  status      String   @default("pending")
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+}
+
+model Volunteer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  phone     String
+  city      String
+  skills    String
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Donation {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  amount    Float
+  orderId   String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+}
+
+model Vet {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  phone     String
+  city      String
+  available Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
