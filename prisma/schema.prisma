@@ -48,11 +48,16 @@ model Donation {
 }
 
 model Vet {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  phone     String
-  city      String
-  available Boolean  @default(true)
-  createdAt DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  name           String
+  email          String   @unique
+  phone          String
+  city           String
+  address        String?
+  specialization String?
+  experience     Int?
+  timing         String?
+  image          String?
+  available      Boolean  @default(true)
+  createdAt      DateTime @default(now())
 }
