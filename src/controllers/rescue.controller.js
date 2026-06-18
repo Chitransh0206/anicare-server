@@ -15,8 +15,20 @@ const createRescue = async (req, res) => {
 
 const getRescues = async (req, res) => {
   try {
-    const rescues = await prisma.rescue.findMany()
+    const rescues = await prisma.rescue.findMany({ orderBy: { createdAt: 'desc' } })
     res.json(rescues)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+const getRescueById = async (req, res) => {
+  try {
+    const rescue = await prisma.rescue.findUnique({
+      where: { id: parseInt(req.params.id) }
+    })
+    if (!rescue) return res.status(404).json({ error: 'Rescue not found' })
+    res.json(rescue)
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
@@ -36,4 +48,4 @@ const updateStatus = async (req, res) => {
   }
 }
 
-module.exports = { createRescue, getRescues, updateStatus }
+module.exports = { createRescue, getRescues, getRescueById, updateStatus }
