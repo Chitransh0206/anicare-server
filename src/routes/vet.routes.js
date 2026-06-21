@@ -7,4 +7,4 @@ router.get('/:id', getVetById)
 router.post('/', addVet)
 router.put('/:id/availability', updateAvailability)
 
-module.exports = routers
+module.exports = router
