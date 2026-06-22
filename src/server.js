@@ -7,6 +7,7 @@ const rescueRoutes = require('./routes/rescue.routes')
 const volunteerRoutes = require('./routes/volunteer.routes')
 const donationRoutes = require('./routes/donation.routes')
 const vetRoutes = require('./routes/vet.routes')
+const adminRoutes = require('./routes/admin.routes')
 
 const app = express()
 app.use(cors())
@@ -17,6 +18,7 @@ app.use('/api/rescues', rescueRoutes)
 app.use('/api/volunteers', volunteerRoutes)
 app.use('/api/donations', donationRoutes)
 app.use('/api/vets', vetRoutes)
+app.use('/api/admin', adminRoutes)
 
 app.get('/', (req, res) => {
   res.json({ message: 'ANIcare backend running!' })
