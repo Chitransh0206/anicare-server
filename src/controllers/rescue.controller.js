@@ -1,4 +1,6 @@
 const { PrismaClient } = require('@prisma/client')
+const { sendRescueAlert } = require('../email')
+
 const prisma = new PrismaClient()
 
 const createRescue = async (req, res) => {
@@ -7,6 +9,10 @@ const createRescue = async (req, res) => {
     const rescue = await prisma.rescue.create({
       data: { animalType, description, location, imageUrl }
     })
+    
+    // Send email notification
+    await sendRescueAlert({ animalType, description, location })
+    
     res.json({ message: 'Rescue request created!', rescue })
   } catch (err) {
     res.status(500).json({ error: err.message })
