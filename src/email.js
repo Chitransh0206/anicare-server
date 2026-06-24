@@ -1,22 +1,12 @@
-const nodemailer = require('nodemailer')
-
-const transporter = nodemailer.createTransport({
-  host: 'smtp-relay.brevo.com',
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-})
+const axios = require('axios')
 
 const sendRescueAlert = async (rescueData) => {
   try {
-    await transporter.sendMail({
-      from: `"ANIcare 🐾" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER,
+    await axios.post('https://api.brevo.com/v3/smtp/email', {
+      sender: { name: 'ANIcare', email: process.env.EMAIL_USER },
+      to: [{ email: process.env.EMAIL_USER }],
       subject: `🚨 New Rescue Request — ${rescueData.animalType} in ${rescueData.location}`,
-      html: `
+      htmlContent: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background: #15803d; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
             <h1 style="color: white; margin: 0;">🐾 ANIcare</h1>
@@ -37,26 +27,24 @@ const sendRescueAlert = async (rescueData) => {
                 <td style="padding: 10px; font-weight: bold; color: #374151;">Description:</td>
                 <td style="padding: 10px; color: #6b7280;">${rescueData.description}</td>
               </tr>
-              <tr style="background: #f3f4f6;">
-                <td style="padding: 10px; font-weight: bold; color: #374151;">Status:</td>
-                <td style="padding: 10px;"><span style="background: #fef2f2; color: #dc2626; padding: 3px 10px; border-radius: 20px; font-size: 12px;">Pending</span></td>
-              </tr>
             </table>
             <div style="text-align: center; margin-top: 25px;">
               <a href="https://anicare-client.vercel.app/feed" style="background: #15803d; color: white; padding: 12px 30px; border-radius: 25px; text-decoration: none; font-weight: bold;">
                 View Rescue Feed →
               </a>
             </div>
-            <p style="color: #9ca3af; font-size: 12px; text-align: center; margin-top: 20px;">
-              © 2026 ANIcare — Protecting Animals Across India 🐾
-            </p>
           </div>
         </div>
       `
+    }, {
+      headers: {
+        'api-key': process.env.BREVO_API_KEY,
+        'Content-Type': 'application/json'
+      }
     })
     console.log('Rescue alert email sent!')
   } catch (err) {
-    console.log('Email error:', err.message)
+    console.log('Email error:', err.response?.data || err.message)
   }
 }
 
